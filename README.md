@@ -1,3 +1,3 @@
-# Node Express JS REST API
+# Node / Express JS REST API
 
 ## Introduction
