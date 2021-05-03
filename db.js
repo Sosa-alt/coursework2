@@ -1,21 +1,24 @@
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 
-const dbConnectionUrl = 'mongodb+srv://coursework:NodeExpress2@coursework-2.ulibq.mongodb.net/coursework?retryWrites=true&w=majority';
+const dbConnectionUrl = "mongodb+srv://coursework:NodeExpress2@coursework-2.ulibq.mongodb.net/coursework?retryWrites=true&w=majority";
 
 function initialize(
-    dbName,
     dbCollectionName,
     successCallback,
-    failureCallback
+    failureCallback,
+    dbName = 'coursework'
 ) {
-    MongoClient.connect(dbConnectionUrl, function(err, dbInstance) {
+    MongoClient.connect(dbConnectionUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }, function(err, dbInstance) {
         if (err) {
             console.log(`[MongoDB connection] ERROR: ${err}`);
             failureCallback(err); // this should be "caught" by the calling function
         } else {
             const dbObject = dbInstance.db(dbName);
             const dbCollection = dbObject.collection(dbCollectionName);
-            console.log('[MongoDB connection] SUCCESS');
+            console.log("[MongoDB connection] SUCCESS");
 
             successCallback(dbCollection);
         }

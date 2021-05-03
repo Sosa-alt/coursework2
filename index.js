@@ -1,8 +1,11 @@
-const express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
+const db = require("./db");
+const app = express();
 const PORT = 4000;
 
-// Setup express app 
-const app = express();
+// Parse JSON from request
+app.use(bodyParser.json());
 
 // Use logger middleware
 app.use(require('./logger'));
@@ -10,7 +13,46 @@ app.use(require('./logger'));
 // Static file middleware
 app.use(express.static('public'));
 
-// Listen for requests
+// Routes for lessons
+db.initialize('lessons', function(dbCollection) { // successCallback
+
+    // get all lessons
+    app.get("/lessons", (req, res) => {
+        dbCollection.find().toArray((error, result) => {
+            if (error) throw error;
+            res.json(result);
+        });
+    });
+
+}, function(err) { // failureCallback
+    throw (err);
+});
+
+// Routes for users
+db.initialize('users', function(dbCollection) { // successCallback
+
+    // get all users
+    app.get("/users", (req, res) => {
+        dbCollection.find().toArray((error, result) => {
+            if (error) throw error;
+            res.json(result);
+        });
+    });
+
+    // get one user - authenticated user
+    app.get("/user", (req, res) => {
+        const emailId = "aguy@gmail.com";
+        dbCollection.findOne({ email: emailId }, (error, result) => {
+            if (error) throw error;
+            // return user
+            res.json(result);
+        })
+    });
+
+}, function(err) { // failureCallback
+    throw (err);
+});
+
 app.listen(process.env.PORT || PORT, () => {
-    console.log('Now listening for requests.');
+    console.log(`Server listening at ${PORT}`);
 });
