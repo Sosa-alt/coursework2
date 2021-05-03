@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const ObjectID = require('mongodb').ObjectID;
 const db = require("./db");
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 // Parse JSON from request
 app.use(bodyParser.json());
@@ -90,6 +90,6 @@ db.initialize('users', function(dbCollection) { // successCallback
     throw (err);
 });
 
-app.listen(process.env.PORT || PORT, () => {
-    console.log(`Server listening at ${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server listening at port ${PORT}`);
 });
