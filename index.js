@@ -24,6 +24,24 @@ db.initialize('lessons', function(dbCollection) { // successCallback
         });
     });
 
+
+}, function(err) { // failureCallback
+    throw (err);
+});
+
+// Routes for orders
+db.initialize('orders', function(dbCollection) { // successCallback
+
+    // save a new order
+    app.post("/orders", (req, res) => {
+        const order = req.body;
+        dbCollection.insertOne(order, (error, result) => { // callback of insertOne
+            if (error) throw error;
+            // return created order
+            res.json(result);
+        });
+    });
+
 }, function(err) { // failureCallback
     throw (err);
 });
