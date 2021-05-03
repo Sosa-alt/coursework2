@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const ObjectID = require('mongodb').ObjectID;
 const db = require("./db");
 const app = express();
 const PORT = 4000;
@@ -23,6 +24,24 @@ db.initialize('lessons', function(dbCollection) { // successCallback
             res.json(result);
         });
     });
+
+    // update lesson
+    app.put("/lessons/:id", (req, res) => {
+        // get the lesson id from the request parameters
+        const lessonId = ObjectID(req.params.id);
+        // get the quantity to deduct from the request body
+        const quantity = req.body.quantity;
+        // Update the particular lesson
+        dbCollection.updateOne({ _id: lessonId }, { $inc: { 'spaces': -quantity } }, (error, result) => {
+            if (error) throw error;
+            // send back the updated lesson
+            dbCollection.findOne({ _id: lessonId }, (error, result) => {
+                if (error) throw error;
+                // return lesson
+                res.json(result);
+            })
+        });
+    })
 
 
 }, function(err) { // failureCallback
