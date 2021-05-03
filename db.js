@@ -1,29 +1,27 @@
 const MongoClient = require('mongodb').MongoClient;
 
-// List the databases in the cluster
-async function listDatabases(client) {
-    databasesList = await client.db().admin().listDatabases();
-    console.log('Databases: ')
-    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+const dbConnectionUrl = 'mongodb+srv://coursework:NodeExpress2@coursework-2.ulibq.mongodb.net/coursework?retryWrites=true&w=majority';
+
+function initialize(
+    dbName,
+    dbCollectionName,
+    successCallback,
+    failureCallback
+) {
+    MongoClient.connect(dbConnectionUrl, function(err, dbInstance) {
+        if (err) {
+            console.log(`[MongoDB connection] ERROR: ${err}`);
+            failureCallback(err); // this should be "caught" by the calling function
+        } else {
+            const dbObject = dbInstance.db(dbName);
+            const dbCollection = dbObject.collection(dbCollectionName);
+            console.log('[MongoDB connection] SUCCESS');
+
+            successCallback(dbCollection);
+        }
+    });
 }
 
-// Create our main function
-async function main() {
-    const uri = "mongodb+srv://coursework:NodeExpress2@coursework-2.ulibq.mongodb.net/coursework?retryWrites=true&w=majority";
-    // Connect to database
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    try {
-        await client.connect();
-
-        await listDatabases(client);
-
-        return client;
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-}
-
-module.exports = main().catch(console.error);
+module.exports = {
+    initialize
+};
