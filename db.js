@@ -1,6 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
 
-const dbConnectionUrl = "mongodb+srv://coursework:NodeExpress2@coursework-2.ulibq.mongodb.net/coursework?retryWrites=true&w=majority";
+const dbConnectionUrl = "mongodb+srv://Coursework:NodeExpress2@cluster0.j3of5.mongodb.net/coursework?retryWrites=true&w=majority";
 
 function initialize(
     dbCollectionName,
