@@ -8,8 +8,9 @@ const PORT = process.env.PORT || 4000;
 app.use((req, res, next) => {
     res.header({
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, x-requested-with, *',
         'Access-Control-Allow-Methods': 'POST, PUT, GET, OPTIONS',
-        'Content-Type': 'application/json'
+        'Access-Control-Request-Headers': 'Content-Type, x-requested-with',
     });
     next();
 });
